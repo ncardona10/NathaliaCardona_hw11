@@ -15,7 +15,7 @@ double dxdt(double x, double v, double t){
   return v;
 }
 //funcion que calcula los valores de x y v aplicando el metodo de runge kutta
-void RK4(double *x, double *v, double *t, double delta){
+void RK4(double *x, double *v, double *t, double delta, double M, double G){
   //se declaran las variables que se van a reutilizar dentro del metodo
   double kx1; double kx2; double kx3; double kx4;
   double kv1; double kv2; double kv3; double kv4;
@@ -23,16 +23,16 @@ void RK4(double *x, double *v, double *t, double delta){
   double xTemp = *x; double vTemp = *v; double tTemp = *t;
   //runge kutta para v y x
   kx1 = dxdt(xTemp, vTemp, tTemp);
-  kv1 = dvdt(xTemp, vTemp, tTemp);
+  kv1 = dvdt(xTemp, vTemp, tTemp,M,G);
 
   kx2 = dxdt(xTemp + kx1 * delta/2, vTemp + kv1 * delta/2, tTemp + delta/2);
-  kv2 = dvdt(xTemp + kx1 * delta/2, vTemp + kv1 * delta/2, tTemp + delta/2);
+  kv2 = dvdt(xTemp + kx1 * delta/2, vTemp + kv1 * delta/2, tTemp + delta/2,M,G);
 
   kx3 = dxdt(xTemp + kx2 * delta/2, vTemp + kv2 * delta/2, tTemp + delta/2);
-  kv3 = dvdt(xTemp + kx2 * delta/2, vTemp + kv2 * delta/2, tTemp + delta/2);
+  kv3 = dvdt(xTemp + kx2 * delta/2, vTemp + kv2 * delta/2, tTemp + delta/2,M,G);
 
   kx4 = dxdt(xTemp + kx3 * delta/2, vTemp + kv3 * delta/2, tTemp + delta/2);
-  kv4 = dvdt(xTemp + kx3 * delta/2, vTemp + kv3 * delta/2, tTemp + delta/2);
+  kv4 = dvdt(xTemp + kx3 * delta/2, vTemp + kv3 * delta/2, tTemp + delta/2,M,G);
 
   tTemp = tTemp + delta;
   xTemp = xTemp + delta * (kx1 + 2*kx2 + 2*kx3 + kx4)/6.0;
@@ -46,17 +46,17 @@ void RK4(double *x, double *v, double *t, double delta){
 //metodo main
 int main() {
   //se definen las condiciones iniciales
-  G=10;
-  M=1000;
-  x=100;
-  v=2;
-  t=0.1;
-  delta=0.001;
-  n=x0*0.01;
+  double G=10;
+  double M=1000;
+  double x=100;
+  double v=2;
+  double t=0.1;
+  double delta=0.001;
+  double n= x*0.01;
   //se calculan los valores de x,v, t  hasta que la particula llegue a el 10 % de  su posicion iniciales
-  while(x0>n){
+  while(x>n){
     cout << x << " " << v << " " << t << endl;
-    RK4(&x, &v, &t, delta);
+    RK4(&x, &v, &t, delta,M,G);
   }
   return 0;
 }
